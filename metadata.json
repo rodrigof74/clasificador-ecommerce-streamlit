@@ -1,0 +1,6 @@
+{
+    "modelo": "Regresión Logística Multinomial",
+    "accuracy": 0.9902,
+    "f1_macro": 0.9859,
+    "balanced_accuracy": 0.9915
+}
