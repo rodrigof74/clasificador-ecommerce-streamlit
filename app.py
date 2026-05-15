@@ -530,64 +530,95 @@ elif menu == "Clasificar sesión":
         col1, col2, col3 = st.columns(3)
         
         with col1:
-            clics_sesion = st.number_input("cantidad de Clics de la sesión", min_value=1, value=8, step=1)
-            productos_vistos = st.number_input("Total Productos vistos", min_value=1, value=8, step=1)
+            clics_sesion = st.number_input(
+                "Cantidad de clics de la sesión",
+                min_value=1,
+                value=8,
+                step=1,
+                help="Cantidad total de clics realizados por el usuario durante la sesión."
+            )
+            productos_vistos = st.number_input(
+                "Total de productos vistos",
+                min_value=1,
+                value=8,
+                step=1,
+                help="Total de productos visualizados durante la sesión, contando repeticiones."
+            )
             productos_unicos = st.number_input(
-              "Modelos de productos distintos revisados",
-               min_value=1,
-               value=6,
-               step=1,
-               help=(
-                    "Cantidad de modelos diferentes revisados de un mismo item o producto durante la sesión. "
-                      "Ejemplo: si el usuario vio Pantalón A, Pantalón A y Pantalón B, "
-                     "entonces productos vistos = 3, pero modelos distintos revisados = 2."
-                      )
-                      )
+                "Modelos de productos distintos revisados",
+                min_value=1,
+                max_value=int(productos_vistos),
+                value=min(6, int(productos_vistos)),
+                step=1,
+                help=(
+                    "Cantidad de modelos diferentes revisados durante la sesión. "
+                    "Ejemplo: si el usuario vio Pantalón A, Pantalón A y Pantalón B, "
+                    "entonces productos vistos = 3, pero modelos distintos revisados = 2."
+                )
+            )
         
         with col2:
-            precio_promedio = st.number_input("Precio promedio visto (USD)", min_value=0.0, value=45.0, step=5.0)
-            precio_maximo = st.number_input("Precio máximo visto (USD)", min_value=0.0, value=65.0, step=5.0)
-            precio_minimo = st.number_input("Precio mínimo visto (USD)", min_value=0.0, value=25.0, step=5.0)
+            precio_promedio = st.number_input(
+                "Precio promedio visto (USD)",
+                min_value=0.0,
+                value=45.0,
+                step=5.0
+            )
+            precio_maximo = st.number_input(
+                "Precio máximo visto (USD)",
+                min_value=0.0,
+                value=65.0,
+                step=5.0
+            )
+            precio_minimo = st.number_input(
+                "Precio mínimo visto (USD)",
+                min_value=0.0,
+                value=25.0,
+                step=5.0
+            )
         
         with col3:
             categorias_unicas = st.number_input(
-              "Variedad de productos explorados",
-               min_value=1,
-               max_value=4,
-               value=2,
-               step=1,
-               help="Cantidad de categorias de productos distintos que el usuario revisó en la sesión: pantalones, faldas, blusas u ofertas."
+                "Variedad de productos explorados",
+                min_value=1,
+                max_value=4,
+                value=2,
+                step=1,
+                help=(
+                    "Cantidad de categorías de productos distintas que el usuario revisó en la sesión: "
+                    "pantalones, faldas, blusas u ofertas."
+                )
             )
             colores_unicos = st.number_input(
-              "Variedad de colores explorados",
-               min_value=1,
-               max_value=14,
-               value=3,
-               step=1,
-               help=(
-               "Cantidad de colores distintos que el usuario revisó durante la sesión.\n\n"
-               "Ejemplos:\n"
-               "- Solo vio productos negros: negro, negro, negro → 1\n"
-               "- Vio negro y azul: negro, azul, negro → 2\n"
-               "- Vio negro, azul y blanco: negro, azul, blanco → 3\n"
-               "- Vio muchos colores distintos: negro, azul, blanco, rojo, gris → 5"
-               )
-           )
-            paginas_unicas = st.number_input(
-             "Páginas distintas visitadas",
-              min_value=1,
-              max_value=5,
-              value=1,
-              step=1,
-              help=(
-                   "Cantidad de páginas diferentes de la tienda que el usuario visitó durante la sesión.\n\n"
-                   "Ejemplos:\n"
-                   "- Solo visitó página 1 → 1\n"
-                   "- Visitó página 1 y página 2 → 2\n"
-                   "- Visitó página 1, página 2 y página 3 → 3\n"
-                   "- Visitó páginas 1 a 5 → 5"
-                   )
+                "Variedad de colores explorados",
+                min_value=1,
+                max_value=14,
+                value=3,
+                step=1,
+                help=(
+                    "Cantidad de colores distintos que el usuario revisó durante la sesión.\n\n"
+                    "Ejemplos:\n"
+                    "- Solo vio productos negros: negro, negro, negro → 1\n"
+                    "- Vio negro y azul: negro, azul, negro → 2\n"
+                    "- Vio negro, azul y blanco: negro, azul, blanco → 3\n"
+                    "- Vio muchos colores distintos: negro, azul, blanco, rojo, gris → 5"
                 )
+            )
+            paginas_unicas = st.number_input(
+                "Páginas distintas visitadas",
+                min_value=1,
+                max_value=5,
+                value=1,
+                step=1,
+                help=(
+                    "Cantidad de páginas diferentes de la tienda que el usuario visitó durante la sesión.\n\n"
+                    "Ejemplos:\n"
+                    "- Solo visitó página 1 → 1\n"
+                    "- Visitó página 1 y página 2 → 2\n"
+                    "- Visitó página 1, página 2 y página 3 → 3\n"
+                    "- Visitó páginas 1 a 5 → 5"
+                )
+            )
         
         st.subheader("🏷️ Variables categóricas")
         col4, col5, col6, col7 = st.columns(4)
@@ -601,27 +632,28 @@ elif menu == "Clasificar sesión":
         with col5:
             continente_principal = st.selectbox(
                 "Continente principal",
-                ["Europa del Este", "Europa Occidental", "Europa del Norte", "Europa del Sur",
-                 "América", "Asia", "Oceanía", "Sin ubicación"]
+                [
+                    "Europa del Este", "Europa Occidental", "Europa del Norte", "Europa del Sur",
+                    "América", "Asia", "Oceanía", "Sin ubicación"
+                ]
             )
         
         with col6:
-           dia_semana_principal = st.selectbox(
-           "Día principal",
-          ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
-          )
+            dia_semana_principal = st.selectbox(
+                "Día principal",
+                ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+            )
 
-       with col7:
-          fin_de_semana = dia_semana_principal in ["Sábado", "Domingo"]
-
-         st.markdown(
-           f"""
-           <div class="info-box">
-           <b>¿Fin de semana?</b><br>
-           {"Sí" if fin_de_semana else "No"}
-            </div>
-            """,
-             unsafe_allow_html=True
+        with col7:
+            fin_de_semana = dia_semana_principal in ["Sábado", "Domingo"]
+            st.markdown(
+                f"""
+                <div class="info-box">
+                    <b>¿Fin de semana?</b><br>
+                    {"Sí" if fin_de_semana else "No"}
+                </div>
+                """,
+                unsafe_allow_html=True
             )
         
         submitted = st.form_submit_button("🚀 Clasificar sesión", use_container_width=True)
@@ -789,3 +821,4 @@ elif menu == "Resultados del modelo":
     facilitando acciones de marketing, remarketing, personalización de ofertas y análisis de perfiles
     de usuarios en el e-commerce.
     """)
+
