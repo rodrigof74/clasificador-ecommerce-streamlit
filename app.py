@@ -573,7 +573,21 @@ elif menu == "Clasificar sesión":
                "- Vio muchos colores distintos: negro, azul, blanco, rojo, gris → 5"
                )
            )
-            paginas_unicas = st.number_input("Páginas únicas", min_value=1, value=1, step=1)
+            paginas_unicas = st.number_input(
+             "Páginas distintas visitadas",
+              min_value=1,
+              max_value=5,
+              value=1,
+              step=1,
+              help=(
+                   "Cantidad de páginas diferentes de la tienda que el usuario visitó durante la sesión.\n\n"
+                   "Ejemplos:\n"
+                   "- Solo visitó página 1 → 1\n"
+                   "- Visitó página 1 y página 2 → 2\n"
+                   "- Visitó página 1, página 2 y página 3 → 3\n"
+                   "- Visitó páginas 1 a 5 → 5"
+                   )
+                )
         
         st.subheader("🏷️ Variables categóricas")
         col4, col5, col6, col7 = st.columns(4)
