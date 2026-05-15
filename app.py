@@ -186,6 +186,104 @@ def validar_datos_sesion(datos: dict) -> list:
     
     return errores
 
+
+# =====================================================
+# CARACTERIZACIÓN COMERCIAL DE SEGMENTOS
+# =====================================================
+caracterizacion_segmentos = {
+    "Exploradores intensivos": {
+        "perfil": (
+            "Cliente altamente activo dentro del e-commerce. Presenta una navegación intensa, "
+            "con varios clics, revisión de múltiples productos y mayor permanencia exploratoria. "
+            "Este perfil suele comparar alternativas antes de tomar una decisión."
+        ),
+        "conducta": (
+            "Tiende a revisar varios modelos, colores o categorías. Puede estar evaluando opciones, "
+            "comparando precios, buscando disponibilidad o analizando distintas alternativas antes de comprar."
+        ),
+        "necesidad": (
+            "Necesita recomendaciones claras, filtros eficientes, comparadores de productos y una experiencia "
+            "de navegación fluida para no abandonar el sitio."
+        ),
+        "accion": (
+            "Aplicar remarketing dinámico, mostrar productos relacionados, destacar productos vistos recientemente "
+            "y ofrecer recomendaciones personalizadas según su historial de navegación."
+        )
+    },
+    "Exploradores medios": {
+        "perfil": (
+            "Cliente con comportamiento de navegación intermedio. No navega de forma superficial, "
+            "pero tampoco presenta una exploración excesivamente alta. Representa un usuario con interés moderado."
+        ),
+        "conducta": (
+            "Revisa una cantidad razonable de productos y categorías. Puede estar buscando un producto específico, "
+            "pero todavía no muestra una intención tan fuerte como los exploradores intensivos."
+        ),
+        "necesidad": (
+            "Necesita estímulos simples para continuar navegando, como productos destacados, recomendaciones básicas "
+            "o mensajes que faciliten avanzar hacia una decisión."
+        ),
+        "accion": (
+            "Mostrar productos populares, recomendaciones por categoría, llamados a la acción claros y beneficios "
+            "como despacho, disponibilidad o promociones moderadas."
+        )
+    },
+    "Exploradores moderados": {
+        "perfil": (
+            "Cliente de baja a moderada exploración. Presenta una navegación más limitada, con menor cantidad de clics "
+            "o menor variedad de productos revisados. Puede tratarse de un usuario con intención poco definida."
+        ),
+        "conducta": (
+            "Suele revisar pocos productos o pocas categorías. Puede abandonar rápidamente si no encuentra algo relevante "
+            "o si la experiencia de navegación requiere demasiado esfuerzo."
+        ),
+        "necesidad": (
+            "Necesita una experiencia simple, directa y guiada. Es importante reducir la fricción y mostrar opciones "
+            "relevantes desde el inicio."
+        ),
+        "accion": (
+            "Usar banners de categorías destacadas, accesos rápidos, productos más vendidos y recomendaciones simples "
+            "para aumentar la exploración."
+        )
+    },
+    "Exploradores premium": {
+        "perfil": (
+            "Cliente con potencial comercial alto. Se asocia a productos de mayor valor, precios promedio más altos "
+            "o patrones de navegación que sugieren interés en artículos de mayor ticket."
+        ),
+        "conducta": (
+            "Puede revisar productos de precio superior, modelos específicos o categorías con mayor valor comercial. "
+            "No necesariamente busca descuentos, sino productos con mayor atractivo, calidad o diferenciación."
+        ),
+        "necesidad": (
+            "Necesita una experiencia más personalizada, con información clara de atributos, calidad, disponibilidad "
+            "y beneficios asociados al producto."
+        ),
+        "accion": (
+            "Mostrar productos premium, recomendaciones personalizadas, colecciones destacadas, beneficios exclusivos "
+            "y campañas de alto valor."
+        )
+    },
+    "Exploradores sensibles al precio": {
+        "perfil": (
+            "Cliente orientado a precio, promociones u oportunidades de ahorro. Su comportamiento puede estar asociado "
+            "a la revisión de ofertas, productos de menor precio o comparación de alternativas económicas."
+        ),
+        "conducta": (
+            "Tiende a revisar productos en oferta, comparar precios o buscar opciones más convenientes. "
+            "Puede responder bien a descuentos, promociones y mensajes de ahorro."
+        ),
+        "necesidad": (
+            "Necesita ver claramente el beneficio económico: precio rebajado, descuento, promoción, liquidación "
+            "o relación precio-conveniencia."
+        ),
+        "accion": (
+            "Destacar ofertas, descuentos, bundles, productos en promoción, mensajes de ahorro y campañas de remarketing "
+            "con incentivo de precio."
+        )
+    }
+}
+
 # =====================================================
 # PORTADA FUTURISTA (COMPLETA)
 # =====================================================
@@ -706,6 +804,32 @@ elif menu == "Clasificar sesión":
                     🎯 Segmento predicho: <span class="prediction-highlight">{prediccion}</span>
                 </div>
                 """, unsafe_allow_html=True)
+
+                # Caracterización del cliente tipo según el segmento predicho
+                info_cliente = caracterizacion_segmentos.get(str(prediccion))
+
+                if info_cliente:
+                    st.markdown(f"""
+                    <div class="info-box" style="margin-top: 1rem;">
+                        <h3>🧑‍💼 Caracterización del cliente tipo</h3>
+                        <p style="font-size: 14px; color: #BAE6FD;">
+                            Esta caracterización describe el perfil comercial típico del segmento predicho. 
+                            No identifica a una persona específica, sino el patrón de comportamiento asociado a la sesión ingresada.
+                        </p>
+
+                        <b>Perfil del cliente:</b><br>
+                        {info_cliente["perfil"]}<br><br>
+
+                        <b>Conducta esperada:</b><br>
+                        {info_cliente["conducta"]}<br><br>
+
+                        <b>Necesidad comercial detectada:</b><br>
+                        {info_cliente["necesidad"]}<br><br>
+
+                        <b>Acción recomendada:</b><br>
+                        {info_cliente["accion"]}
+                    </div>
+                    """, unsafe_allow_html=True)
 
                 if hasattr(modelo, "predict_proba"):
                     probabilidades = modelo.predict_proba(nueva_sesion_df)[0]
