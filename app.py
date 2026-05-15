@@ -512,9 +512,9 @@ if menu == "Inicio":
 # =====================================================
 elif menu == "Clasificar sesión":
     st.markdown('<div class="section-title">🔎 Clasificar una nueva sesión</div>', unsafe_allow_html=True)
-    
+
     modelo = cargar_modelo()
-    
+
     st.markdown("""
     <div class="info-box">
     Complete los datos asociados al comportamiento de navegación del usuario.
@@ -522,13 +522,42 @@ elif menu == "Clasificar sesión":
     al que pertenece según el modelo entrenado.
     </div>
     """, unsafe_allow_html=True)
-    
+
     st.write("")
-    
+
+    # =====================================================
+    # TEMPORALIDAD FUERA DEL FORMULARIO
+    # Esto permite que "¿Fin de semana?" cambie inmediatamente al cambiar el día.
+    # =====================================================
+    st.subheader("📅 Temporalidad de la sesión")
+    col_dia, col_finde = st.columns([1, 1])
+
+    with col_dia:
+        dia_semana_principal = st.selectbox(
+            "Día principal",
+            ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"],
+            help="Día principal en que se desarrolla la sesión de navegación."
+        )
+
+    fin_de_semana = dia_semana_principal in ["Sábado", "Domingo"]
+
+    with col_finde:
+        st.markdown(
+            f"""
+            <div class="info-box">
+                <b>¿Fin de semana?</b><br>
+                {"Sí" if fin_de_semana else "No"}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+    st.write("")
+
     with st.form(key="form_clasificacion"):
         st.subheader("📊 Variables numéricas")
         col1, col2, col3 = st.columns(3)
-        
+
         with col1:
             clics_sesion = st.number_input(
                 "Cantidad de clics de la sesión",
@@ -556,7 +585,7 @@ elif menu == "Clasificar sesión":
                     "entonces productos vistos = 3, pero modelos distintos revisados = 2."
                 )
             )
-        
+
         with col2:
             precio_promedio = st.number_input(
                 "Precio promedio visto (USD)",
@@ -576,7 +605,7 @@ elif menu == "Clasificar sesión":
                 value=25.0,
                 step=5.0
             )
-        
+
         with col3:
             categorias_unicas = st.number_input(
                 "Variedad de productos explorados",
@@ -619,45 +648,29 @@ elif menu == "Clasificar sesión":
                     "- Visitó páginas 1 a 5 → 5"
                 )
             )
-        
+
         st.subheader("🏷️ Variables categóricas")
-        col4, col5, col6, col7 = st.columns(4)
-        
+        col4, col5 = st.columns(2)
+
         with col4:
             categoria_principal = st.selectbox(
                 "Categoría principal",
-                ["pantalones", "faldas", "blusas", "ofertas"]
+                ["pantalones", "faldas", "blusas", "ofertas"],
+                help="Categoría predominante de productos revisados durante la sesión."
             )
-        
+
         with col5:
             continente_principal = st.selectbox(
                 "Continente principal",
                 [
                     "Europa del Este", "Europa Occidental", "Europa del Norte", "Europa del Sur",
                     "América", "Asia", "Oceanía", "Sin ubicación"
-                ]
-            )
-        
-        with col6:
-            dia_semana_principal = st.selectbox(
-                "Día principal",
-                ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+                ],
+                help="Zona geográfica principal asociada a la sesión."
             )
 
-        with col7:
-            fin_de_semana = dia_semana_principal in ["Sábado", "Domingo"]
-            st.markdown(
-                f"""
-                <div class="info-box">
-                    <b>¿Fin de semana?</b><br>
-                    {"Sí" if fin_de_semana else "No"}
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-        
         submitted = st.form_submit_button("🚀 Clasificar sesión", use_container_width=True)
-    
+
     if submitted:
         datos_sesion = {
             "clics_sesion": clics_sesion,
@@ -674,43 +687,46 @@ elif menu == "Clasificar sesión":
             "dia_semana_principal": dia_semana_principal,
             "fin_de_semana": fin_de_semana
         }
-        
+
         errores_validacion = validar_datos_sesion(datos_sesion)
         if errores_validacion:
             for error in errores_validacion:
                 st.error(f"⚠️ {error}")
         else:
             nueva_sesion_df = pd.DataFrame([datos_sesion])
-            
+
             with st.expander("📋 Ver datos ingresados"):
                 st.dataframe(nueva_sesion_df, use_container_width=True, hide_index=True)
-            
+
             try:
                 prediccion = modelo.predict(nueva_sesion_df)[0]
-                
+
                 st.markdown(f"""
                 <div class="success-box" style="text-align: center;">
                     🎯 Segmento predicho: <span class="prediction-highlight">{prediccion}</span>
                 </div>
                 """, unsafe_allow_html=True)
-                
+
                 if hasattr(modelo, "predict_proba"):
                     probabilidades = modelo.predict_proba(nueva_sesion_df)[0]
                     clases = modelo.classes_
-                    
+
                     df_prob = pd.DataFrame({
                         "Segmento": clases,
                         "Probabilidad": probabilidades
                     }).sort_values("Probabilidad", ascending=False)
-                    
+
                     st.subheader("📈 Probabilidad por segmento")
-                    
+
                     col_a, col_b = st.columns([1, 2])
-                    
+
                     with col_a:
-                        st.dataframe(df_prob.style.format({'Probabilidad': '{:.2%}'}), 
-                                    use_container_width=True, hide_index=True)
-                    
+                        st.dataframe(
+                            df_prob.style.format({'Probabilidad': '{:.2%}'}),
+                            use_container_width=True,
+                            hide_index=True
+                        )
+
                     with col_b:
                         fig = px.bar(
                             df_prob,
@@ -720,23 +736,23 @@ elif menu == "Clasificar sesión":
                             title="Probabilidad estimada por segmento"
                         )
                         fig.update_traces(
-    textposition="outside",
-    marker_color="#22D3EE",
-    marker_line_color="#A5F3FC",
-    marker_line_width=1.5
-)
+                            textposition="outside",
+                            marker_color="#22D3EE",
+                            marker_line_color="#A5F3FC",
+                            marker_line_width=1.5
+                        )
                         fig.update_layout(
-    yaxis_tickformat=".0%",
-    xaxis_title="Segmento",
-    yaxis_title="Probabilidad",
-    title_font=dict(size=20, color="#E0F2FE"),
-    xaxis=dict(tickangle=-25),
-    paper_bgcolor="rgba(0,0,0,0)",
-    plot_bgcolor="rgba(0,0,0,0)",
-    font=dict(color="#E5E7EB")
-)
+                            yaxis_tickformat=".0%",
+                            xaxis_title="Segmento",
+                            yaxis_title="Probabilidad",
+                            title_font=dict(size=20, color="#E0F2FE"),
+                            xaxis=dict(tickangle=-25),
+                            paper_bgcolor="rgba(0,0,0,0)",
+                            plot_bgcolor="rgba(0,0,0,0)",
+                            font=dict(color="#E5E7EB")
+                        )
                         st.plotly_chart(fig, use_container_width=True)
-                
+
                 st.markdown("""
 <div class="info-box" style="margin-top: 1rem;">
 💡 <b>Interpretación comercial:</b> El segmento predicho representa el perfil comercial más probable del usuario
@@ -744,7 +760,7 @@ según su intensidad de navegación, productos explorados, precios observados,
 categoría consultada, ubicación geográfica y temporalidad de la sesión.
 </div>
 """, unsafe_allow_html=True)
-                
+
             except Exception as e:
                 st.error(f"❌ Error durante la predicción: {e}", icon="🤖")
 
