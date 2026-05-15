@@ -284,6 +284,75 @@ caracterizacion_segmentos = {
     }
 }
 
+
+# =====================================================
+# RECOMENDACIÓN DE PRODUCTOS Y RANGO DE PRECIO
+# =====================================================
+def recomendar_productos_y_precio(categoria_principal, precio_promedio):
+    """
+    Recomienda dos categorías complementarias según la categoría principal revisada
+    y clasifica el rango de precio de interés usando cortes basados en la base por sesión.
+
+    Rangos utilizados según precio promedio observado por sesión:
+    - Bajo: 18,00 a 38,17 USD
+    - Medio: 38,18 a 49,00 USD
+    - Alto: 49,01 a 82,00 USD
+    """
+
+    recomendaciones_por_categoria = {
+        "pantalones": ["blusas", "faldas"],
+        "faldas": ["blusas", "pantalones"],
+        "blusas": ["faldas", "pantalones"],
+        "ofertas": ["pantalones", "blusas"]
+    }
+
+    productos_recomendados = recomendaciones_por_categoria.get(
+        categoria_principal,
+        ["pantalones", "blusas"]
+    )
+
+    if precio_promedio <= 38.17:
+        rango_precio = "Bajo"
+        rango_valores = "18,00 a 38,17 USD"
+        descripcion_precio = (
+            "Interés probable en productos económicos, ofertas o alternativas de menor precio. "
+            "Este rango corresponde al tramo inferior de precios promedio observados en las sesiones."
+        )
+        estrategia_precio = (
+            "Priorizar descuentos, liquidaciones, promociones y productos de entrada. "
+            "También conviene destacar mensajes de ahorro o precio conveniente."
+        )
+    elif precio_promedio <= 49.00:
+        rango_precio = "Medio"
+        rango_valores = "38,18 a 49,00 USD"
+        descripcion_precio = (
+            "Interés probable en productos de precio intermedio. "
+            "Este rango representa el comportamiento central de precios promedio observados en la base."
+        )
+        estrategia_precio = (
+            "Recomendar productos populares, combinaciones por categoría y promociones moderadas. "
+            "Es un rango adecuado para sugerencias equilibradas entre precio, variedad y atractivo comercial."
+        )
+    else:
+        rango_precio = "Alto"
+        rango_valores = "49,01 a 82,00 USD"
+        descripcion_precio = (
+            "Interés probable en productos de mayor valor o mayor atractivo comercial. "
+            "Este rango corresponde al tramo superior de precios promedio observados en las sesiones."
+        )
+        estrategia_precio = (
+            "Mostrar productos premium, colecciones destacadas y recomendaciones personalizadas. "
+            "También se pueden priorizar atributos de calidad, diseño, exclusividad o mayor valor percibido."
+        )
+
+    return {
+        "productos": productos_recomendados,
+        "rango_precio": rango_precio,
+        "rango_valores": rango_valores,
+        "descripcion_precio": descripcion_precio,
+        "estrategia_precio": estrategia_precio
+    }
+
 # =====================================================
 # PORTADA FUTURISTA (COMPLETA)
 # =====================================================
@@ -835,6 +904,46 @@ elif menu == "Clasificar sesión":
                     with col_accion:
                         st.markdown("#### 🚀 Acción recomendada")
                         st.write(info_cliente["accion"])
+
+
+                # Recomendación de productos/categorías y rango de precio de interés
+                recomendacion = recomendar_productos_y_precio(categoria_principal, precio_promedio)
+
+                st.markdown("### 🛍️ Productos recomendados y rango de precio de interés")
+                st.info(
+                    "Estas recomendaciones se basan en la categoría principal revisada y en el precio promedio observado en la sesión. "
+                    "No representan una compra final, sino una sugerencia comercial basada en comportamiento de navegación."
+                )
+
+                col_rec1, col_rec2, col_precio = st.columns(3)
+
+                with col_rec1:
+                    st.metric(
+                        "Producto recomendado 1",
+                        recomendacion["productos"][0].capitalize()
+                    )
+
+                with col_rec2:
+                    st.metric(
+                        "Producto recomendado 2",
+                        recomendacion["productos"][1].capitalize()
+                    )
+
+                with col_precio:
+                    st.metric(
+                        "Rango de precio de interés",
+                        f'{recomendacion["rango_precio"]}: {recomendacion["rango_valores"]}'
+                    )
+
+                col_desc_precio, col_estrategia_precio = st.columns(2)
+
+                with col_desc_precio:
+                    st.markdown("#### 💵 Interpretación del rango de precio")
+                    st.write(recomendacion["descripcion_precio"])
+
+                with col_estrategia_precio:
+                    st.markdown("#### 🎯 Estrategia comercial sugerida")
+                    st.write(recomendacion["estrategia_precio"])
 
                 if hasattr(modelo, "predict_proba"):
                     probabilidades = modelo.predict_proba(nueva_sesion_df)[0]
