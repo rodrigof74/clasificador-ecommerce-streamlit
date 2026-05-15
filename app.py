@@ -540,7 +540,14 @@ elif menu == "Clasificar sesión":
             precio_minimo = st.number_input("Precio mínimo visto (USD)", min_value=0.0, value=25.0, step=5.0)
         
         with col3:
-            categorias_unicas = st.number_input("Categorías únicas", min_value=1, value=2, step=1)
+            categorias_unicas = st.number_input(
+              "Variedad de productos explorados",
+               min_value=1,
+               max_value=4,
+               value=2,
+               step=1,
+               help="Cantidad de tipos de productos distintos que el usuario revisó en la sesión: pantalones, faldas, blusas u ofertas."
+            )
             colores_unicos = st.number_input("Colores de los productos", min_value=1, value=3, step=1)
             paginas_unicas = st.number_input("Páginas únicas", min_value=1, value=1, step=1)
         
