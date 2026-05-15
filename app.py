@@ -532,7 +532,17 @@ elif menu == "Clasificar sesión":
         with col1:
             clics_sesion = st.number_input("cantidad de Clics de la sesión", min_value=1, value=8, step=1)
             productos_vistos = st.number_input("Total Productos vistos", min_value=1, value=8, step=1)
-            productos_unicos = st.number_input("Productos únicos", min_value=1, value=6, step=1)
+            productos_unicos = st.number_input(
+              "Modelos de productos distintos revisados",
+               min_value=1,
+               value=6,
+               step=1,
+               help=(
+                    "Cantidad de modelos diferentes revisados de un mismo item o producto durante la sesión. "
+                      "Ejemplo: si el usuario vio Pantalón A, Pantalón A y Pantalón B, "
+                     "entonces productos vistos = 3, pero modelos distintos revisados = 2."
+                      )
+                      )
         
         with col2:
             precio_promedio = st.number_input("Precio promedio visto (USD)", min_value=0.0, value=45.0, step=5.0)
@@ -546,7 +556,7 @@ elif menu == "Clasificar sesión":
                max_value=4,
                value=2,
                step=1,
-               help="Cantidad de tipos de productos distintos que el usuario revisó en la sesión: pantalones, faldas, blusas u ofertas."
+               help="Cantidad de categorias de productos distintos que el usuario revisó en la sesión: pantalones, faldas, blusas u ofertas."
             )
             colores_unicos = st.number_input(
               "Variedad de colores explorados",
