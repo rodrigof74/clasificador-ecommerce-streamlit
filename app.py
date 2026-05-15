@@ -548,7 +548,21 @@ elif menu == "Clasificar sesión":
                step=1,
                help="Cantidad de tipos de productos distintos que el usuario revisó en la sesión: pantalones, faldas, blusas u ofertas."
             )
-            colores_unicos = st.number_input("Colores de los productos", min_value=1, value=3, step=1)
+            colores_unicos = st.number_input(
+              "Variedad de colores explorados",
+               min_value=1,
+               max_value=14,
+               value=3,
+               step=1,
+               help=(
+               "Cantidad de colores distintos que el usuario revisó durante la sesión.\n\n"
+               "Ejemplos:\n"
+               "- Solo vio productos negros: negro, negro, negro → 1\n"
+               "- Vio negro y azul: negro, azul, negro → 2\n"
+               "- Vio negro, azul y blanco: negro, azul, blanco → 3\n"
+               "- Vio muchos colores distintos: negro, azul, blanco, rojo, gris → 5"
+               )
+           )
             paginas_unicas = st.number_input("Páginas únicas", min_value=1, value=1, step=1)
         
         st.subheader("🏷️ Variables categóricas")
