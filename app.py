@@ -809,27 +809,32 @@ elif menu == "Clasificar sesión":
                 info_cliente = caracterizacion_segmentos.get(str(prediccion))
 
                 if info_cliente:
-                    st.markdown(f"""
-                    <div class="info-box" style="margin-top: 1rem;">
-                        <h3>🧑‍💼 Caracterización del cliente tipo</h3>
-                        <p style="font-size: 14px; color: #BAE6FD;">
-                            Esta caracterización describe el perfil comercial típico del segmento predicho. 
-                            No identifica a una persona específica, sino el patrón de comportamiento asociado a la sesión ingresada.
-                        </p>
+                    st.markdown("### 🧑‍💼 Caracterización del cliente tipo")
+                    st.info(
+                        "Esta caracterización describe el perfil comercial típico del segmento predicho. "
+                        "No identifica a una persona específica, sino el patrón de comportamiento asociado "
+                        "a la sesión ingresada."
+                    )
 
-                        <b>Perfil del cliente:</b><br>
-                        {info_cliente["perfil"]}<br><br>
+                    col_perfil, col_conducta = st.columns(2)
 
-                        <b>Conducta esperada:</b><br>
-                        {info_cliente["conducta"]}<br><br>
+                    with col_perfil:
+                        st.markdown("#### 👤 Perfil del cliente")
+                        st.write(info_cliente["perfil"])
 
-                        <b>Necesidad comercial detectada:</b><br>
-                        {info_cliente["necesidad"]}<br><br>
+                    with col_conducta:
+                        st.markdown("#### 🧭 Conducta esperada")
+                        st.write(info_cliente["conducta"])
 
-                        <b>Acción recomendada:</b><br>
-                        {info_cliente["accion"]}
-                    </div>
-                    """, unsafe_allow_html=True)
+                    col_necesidad, col_accion = st.columns(2)
+
+                    with col_necesidad:
+                        st.markdown("#### 🎯 Necesidad comercial detectada")
+                        st.write(info_cliente["necesidad"])
+
+                    with col_accion:
+                        st.markdown("#### 🚀 Acción recomendada")
+                        st.write(info_cliente["accion"])
 
                 if hasattr(modelo, "predict_proba"):
                     probabilidades = modelo.predict_proba(nueva_sesion_df)[0]
