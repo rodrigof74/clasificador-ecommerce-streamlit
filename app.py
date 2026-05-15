@@ -606,13 +606,23 @@ elif menu == "Clasificar sesión":
             )
         
         with col6:
-            dia_semana_principal = st.selectbox(
-                "Día principal",
-                ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+           dia_semana_principal = st.selectbox(
+           "Día principal",
+          ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+          )
+
+       with col7:
+          fin_de_semana = dia_semana_principal in ["Sábado", "Domingo"]
+
+         st.markdown(
+           f"""
+           <div class="info-box">
+           <b>¿Fin de semana?</b><br>
+           {"Sí" if fin_de_semana else "No"}
+            </div>
+            """,
+             unsafe_allow_html=True
             )
-        
-        with col7:
-            fin_de_semana = st.selectbox("¿Fin de semana?", [False, True], format_func=lambda x: "Sí" if x else "No")
         
         submitted = st.form_submit_button("🚀 Clasificar sesión", use_container_width=True)
     
