@@ -945,6 +945,79 @@ elif menu == "Clasificar sesión":
                     st.markdown("#### 🎯 Estrategia comercial sugerida")
                     st.write(recomendacion["estrategia_precio"])
 
+                # =====================================================
+                # RADAR DEL PERFIL DE NAVEGACIÓN
+                # =====================================================
+                st.markdown("### 🕸️ Radar del perfil de navegación")
+                st.info(
+                    "Este gráfico resume el comportamiento de la sesión ingresada. "
+                    "Los valores se muestran en escala 0 a 100 para facilitar la comparación entre variables."
+                )
+
+                def normalizar(valor, minimo, maximo):
+                    if maximo == minimo:
+                        return 0
+                    return max(0, min(100, ((valor - minimo) / (maximo - minimo)) * 100))
+
+                df_radar = pd.DataFrame({
+                    "Variable": [
+                        "Clics",
+                        "Productos vistos",
+                        "Modelos distintos",
+                        "Categorías exploradas",
+                        "Colores explorados",
+                        "Páginas visitadas"
+                    ],
+                    "Valor real": [
+                        clics_sesion,
+                        productos_vistos,
+                        productos_unicos,
+                        categorias_unicas,
+                        colores_unicos,
+                        paginas_unicas
+                    ],
+                    "Valor normalizado": [
+                        normalizar(clics_sesion, 1, 50),
+                        normalizar(productos_vistos, 1, 50),
+                        normalizar(productos_unicos, 1, 50),
+                        normalizar(categorias_unicas, 1, 4),
+                        normalizar(colores_unicos, 1, 14),
+                        normalizar(paginas_unicas, 1, 5)
+                    ]
+                })
+
+                fig_radar = px.line_polar(
+                    df_radar,
+                    r="Valor normalizado",
+                    theta="Variable",
+                    line_close=True,
+                    title="Perfil de navegación de la sesión ingresada",
+                    hover_data={
+                        "Valor real": True,
+                        "Valor normalizado": ":.1f"
+                    }
+                )
+
+                fig_radar.update_traces(
+                    fill="toself",
+                    line_color="#22D3EE"
+                )
+
+                fig_radar.update_layout(
+                    polar=dict(
+                        radialaxis=dict(
+                            visible=True,
+                            range=[0, 100]
+                        )
+                    ),
+                    paper_bgcolor="rgba(0,0,0,0)",
+                    plot_bgcolor="rgba(0,0,0,0)",
+                    font=dict(color="#E5E7EB")
+                )
+
+                st.plotly_chart(fig_radar, use_container_width=True)
+
+
                 if hasattr(modelo, "predict_proba"):
                     probabilidades = modelo.predict_proba(nueva_sesion_df)[0]
                     clases = modelo.classes_
