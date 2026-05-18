@@ -581,7 +581,7 @@ st.sidebar.title("📌 Menú")
 
 menu = st.sidebar.radio(
     "Seleccione una sección",
-    ["Inicio", "Clasificar sesión", "Resultados del modelo"]
+    ["Inicio", "Clasificar sesión", "Resultados del modelo", "Alcance metodológico"]
 )
 
 st.sidebar.divider()
@@ -1408,5 +1408,36 @@ elif menu == "Resultados del modelo":
     Una nueva sesión de navegación puede ser asignada automáticamente a un segmento comercial,
     facilitando acciones de marketing, remarketing, personalización de ofertas y análisis de perfiles
     de usuarios en el e-commerce.
+    """)
+    elif menu == "Alcance metodológico":
+    st.markdown('<div class="section-title">🧭 Alcance metodológico del modelo</div>', unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="info-box">
+    Este clasificador no predice compras ni conversión final, ya que el dataset utilizado
+    no contiene información de carrito, ventas o transacciones. Su objetivo es asignar
+    nuevas sesiones de navegación a segmentos comerciales previamente construidos mediante
+    técnicas de clustering.
+    <br><br>
+    Por lo tanto, las métricas del modelo indican qué tan bien el clasificador reproduce
+    los segmentos generados por PCA + K-Means, no necesariamente qué tan bien predice
+    valor comercial real.
+    <br><br>
+    La utilidad del modelo está en transformar una segmentación exploratoria en una
+    herramienta operativa que permite clasificar nuevas sesiones y apoyar decisiones de
+    marketing, remarketing y personalización.
+    <br><br>
+    Como mejora futura, se recomienda validar estos segmentos con datos reales de compra,
+    conversión, carrito, permanencia o respuesta a campañas.
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.subheader("⚠️ Consideraciones importantes")
+
+    st.markdown("""
+    - Los segmentos fueron construidos desde patrones de navegación.
+    - El clasificador aprende a asignar nuevas sesiones a esos segmentos.
+    - Las métricas altas no deben interpretarse como predicción directa de ventas.
+    - La validación comercial requiere datos futuros o variables de conversión real.
     """)
 
