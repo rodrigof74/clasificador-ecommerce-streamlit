@@ -1409,7 +1409,7 @@ elif menu == "Resultados del modelo":
     facilitando acciones de marketing, remarketing, personalización de ofertas y análisis de perfiles
     de usuarios en el e-commerce.
     """)
-    elif menu == "Alcance metodológico":
+elif menu == "Alcance metodológico":
     st.markdown('<div class="section-title">🧭 Alcance metodológico del modelo</div>', unsafe_allow_html=True)
 
     st.markdown("""
