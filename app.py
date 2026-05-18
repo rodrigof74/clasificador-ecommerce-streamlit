@@ -911,8 +911,7 @@ elif menu == "Clasificar sesión":
 
                 st.markdown("### 🛍️ Productos recomendados y rango de precio de interés")
                 st.info(
-                    "Estas recomendaciones se basan en la categoría principal revisada y en el precio promedio observado en la sesión. "
-                    "No representan una compra final, sino una sugerencia comercial basada en comportamiento de navegación."
+                    "Npta: Estas recomendaciones No representan una compra final, sino una sugerencia comercial basada en comportamiento de navegación."
                 )
 
                 col_rec1, col_rec2, col_precio = st.columns(3)
