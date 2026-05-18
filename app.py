@@ -1440,5 +1440,3 @@ elif menu == "Resultados del modelo":
     - Las métricas altas no deben interpretarse como predicción directa de ventas.
     - La validación comercial requiere datos futuros o variables de conversión real.
     """)
-
-
