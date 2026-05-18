@@ -1441,3 +1441,4 @@ elif menu == "Resultados del modelo":
     - La validación comercial requiere datos futuros o variables de conversión real.
     """)
 
+
